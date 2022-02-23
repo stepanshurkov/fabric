@@ -97,7 +97,7 @@ PROJECT_FILES = $(shell git ls-files  | grep -v ^test | grep -v ^unit-test | \
 	grep -v ^LICENSE | grep -v ^vendor )
 RELEASE_TEMPLATES = $(shell git ls-files | grep "release/templates")
 IMAGES = peer orderer ccenv buildenv tools
-RELEASE_PLATFORMS = windows-amd64 darwin-amd64 linux-amd64 linux-s390x linux-ppc64le
+RELEASE_PLATFORMS = darwin-arm64 linux-arm64
 RELEASE_PKGS = configtxgen cryptogen idemixgen discover configtxlator peer orderer
 
 pkgmap.cryptogen      := $(PKGNAME)/common/tools/cryptogen
@@ -341,16 +341,16 @@ release-all: $(patsubst %,release/%, $(RELEASE_PLATFORMS))
 
 release/%: GO_LDFLAGS=-X $(pkgmap.$(@F))/metadata.CommitSHA=$(EXTRA_VERSION)
 
-release/windows-amd64: GOOS=windows
-release/windows-amd64: $(patsubst %,release/windows-amd64/bin/%, $(RELEASE_PKGS))
+# release/windows-amd64: GOOS=windows
+# release/windows-amd64: $(patsubst %,release/windows-amd64/bin/%, $(RELEASE_PKGS))
 
-release/darwin-amd64: GOOS=darwin
-release/darwin-amd64: $(patsubst %,release/darwin-amd64/bin/%, $(RELEASE_PKGS))
+release/darwin-arm64: GOOS=darwin
+release/darwin-arm64: $(patsubst %,release/darwin-arm64/bin/%, $(RELEASE_PKGS))
 
-release/linux-amd64: GOOS=linux
-release/linux-amd64: $(patsubst %,release/linux-amd64/bin/%, $(RELEASE_PKGS))
+release/linux-arm64: GOOS=linux
+release/linux-arm64: $(patsubst %,release/linux-arm64/bin/%, $(RELEASE_PKGS))
 
-release/%-amd64: GOARCH=amd64
+release/%-arm64: GOARCH=arm64
 release/linux-%: GOOS=linux
 
 release/linux-s390x: GOARCH=s390x
@@ -449,8 +449,8 @@ clean-all: clean gotools-clean dist-clean
 .PHONY: dist-clean
 dist-clean:
 	-@rm -rf release/windows-amd64/hyperledger-fabric-windows-amd64.$(PROJECT_VERSION).tar.gz
-	-@rm -rf release/darwin-amd64/hyperledger-fabric-darwin-amd64.$(PROJECT_VERSION).tar.gz
-	-@rm -rf release/linux-amd64/hyperledger-fabric-linux-amd64.$(PROJECT_VERSION).tar.gz
+	-@rm -rf release/darwin-arm64/hyperledger-fabric-darwin-arm64.$(PROJECT_VERSION).tar.gz
+	-@rm -rf release/linux-arm64/hyperledger-fabric-linux-arm64.$(PROJECT_VERSION).tar.gz
 	-@rm -rf release/linux-s390x/hyperledger-fabric-linux-s390x.$(PROJECT_VERSION).tar.gz
 	-@rm -rf release/linux-ppc64le/hyperledger-fabric-linux-ppc64le.$(PROJECT_VERSION).tar.gz
 
